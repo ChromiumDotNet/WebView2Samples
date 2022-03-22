@@ -42,6 +42,7 @@ namespace WebView2WpfBrowser
         public static RoutedCommand CheckUpdateCommand = new RoutedCommand();
         public static RoutedCommand NewBrowserVersionCommand = new RoutedCommand();
         public static RoutedCommand PdfToolbarSaveCommand = new RoutedCommand();
+        public static RoutedCommand AuthenticationCommand = new RoutedCommand();
         public static RoutedCommand ClearBrowsingDataCommand = new RoutedCommand();
         public static RoutedCommand SetDefaultDownloadPathCommand = new RoutedCommand();
         public static RoutedCommand CreateDownloadsButtonCommand = new RoutedCommand();
@@ -788,6 +789,20 @@ namespace WebView2WpfBrowser
                 cm.Items.Add(newItem);
             }
         }
+        void AuthenticationCmdExecuted(object target, ExecutedRoutedEventArgs e)
+        {
+            // <BasicAuthenticationRequested>
+            webView.CoreWebView2.BasicAuthenticationRequested += delegate (object sender, CoreWebView2BasicAuthenticationRequestedEventArgs args)
+            {
+                // [SuppressMessage("Microsoft.Security", "CS002:SecretInNextLine", Justification="Demo credentials in https://authenticationtest.com")]
+                args.Response.UserName = "user";
+                // [SuppressMessage("Microsoft.Security", "CS002:SecretInNextLine", Justification="Demo credentials in https://authenticationtest.com")]
+                args.Response.Password = "pass";
+            };
+            // </BasicAuthenticationRequested>
+            webView.CoreWebView2.Navigate("https://authenticationtest.com/HTTPAuth");
+        }
+
         void PinchZoomCmdExecuted(object target, ExecutedRoutedEventArgs e)
         {
             WebViewSettings.IsPinchZoomEnabled = !WebViewSettings.IsPinchZoomEnabled;
