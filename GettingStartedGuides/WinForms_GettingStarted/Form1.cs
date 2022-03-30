@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
+using WebView2.DevTools.Dom;
 
 namespace WinForms_GettingStarted
 {
@@ -73,5 +74,21 @@ namespace WinForms_GettingStarted
 
         }
 
+        private async void btnSearch_Click(object sender, EventArgs e)
+        {
+            var ctx = await webView.CoreWebView2.CreateDevToolsContextAsync();
+
+            var btn = await ctx.QuerySelectorAsync<HtmlButtonElement>("#search");
+
+            await btn.ClickAsync();
+
+            var input = await ctx.QuerySelectorAsync<HtmlInputElement>("#cli_shellHeaderSearchInput");
+
+            await input.TypeAsync("WebView2");
+
+            await ctx.Keyboard.PressAsync("Enter");
+
+            await ctx.DisposeAsync();
+        }
     }
 }
